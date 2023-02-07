@@ -14,7 +14,7 @@ def masked_log_softmax(vector: torch.Tensor, mask: torch.Tensor, dim: int = -1) 
         # 这里(mask+1e-45)是因为当整个vector都被mask的时候
         # 结果就会变成nan,所以通过加一个很小的值来防止出现这种
         # 情况,1e-45是能够取到的最小的值,1e-46就太小了
-        print(mask.shape)
+        #print(mask.shape)
         vector = vector + (mask + 1e-45).log()
     # log_softmax在softmax的基础上加了一次log
     return F.log_softmax(vector, dim=dim)
@@ -131,7 +131,7 @@ class PtrNetwork(nn.Module):
 		# encoder_hidden => (num_layers * num_directions, batch_size, hidden_size) for each of h_n and c_n
         encoder_outputs, encoder_hidden = self.encoder(embedded, input_length)
         if self.bidirectional:
-            encoder_outputs = encoder_outputs[:, :, :self.hidden_size] + encoder_outputs[:, :, self.hidden_size]
+            encoder_outputs = encoder_outputs[:, :, :self.hidden_size] + encoder_outputs[:, :, self.hidden_size:]
 
         encoder_h_n, encoder_c_n = encoder_hidden
         encoder_h_n = encoder_h_n.view(self.num_layers, self.num_direction, batch_size, self.hidden_size)
